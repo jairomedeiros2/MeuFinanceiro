@@ -1,0 +1,128 @@
+<div class="sidebar d-flex flex-column p-4 bg-white border-end">
+
+  <!-- Logo -->
+  <div class="logo-container mb-4">
+    <span class="logo-main">Meu Financeiro</span>
+    <span class="logo-sub">by Jairo Medeiros</span>
+  </div>
+
+  <!-- Botão Novo
+  <button class="btn btn-novo d-flex align-items-center justify-content-center mb-4">
+    <i class="bi bi-plus-lg me-2"></i> Novo
+  </button> -->
+
+  <!-- Container do Dropdown -->
+<div class="dropdown w-100 mb-4 px-2">
+
+  <!-- Botão que ativa o menu -->
+  <button
+    class="btn btn-novo d-flex align-items-center justify-content-center w-100 dropdown-toggle"
+    type="button"
+    id="dropdownMenuNovo"
+    data-bs-toggle="dropdown"
+    aria-expanded="false">
+    <i class="bi bi-plus-lg me-2"></i> Novo
+  </button>
+
+  <!-- Lista de Opções (Menu Flutuante) -->
+  <ul class="dropdown-menu dropdown-novo-menu border-0 shadow-sm p-2 rounded-4" aria-labelledby="dropdownMenuNovo">
+
+    <!-- Opção Despesa -->
+    <li>
+      <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+        <div class="icon-box text-danger bg-danger-light">
+          <i class="bi bi-graph-down-arrow"></i>
+        </div>
+        <span class="item-text">Despesa</span>
+      </a>
+    </li>
+
+    <!-- Opção Receita -->
+    <li>
+      <a class="dropdown-item d-flex align-items-center gap-3 py-2" style="cursor: pointer;" data-bs-toggle="modal"
+        data-bs-target="#modalNovaTransacao">
+        <div class="icon-box text-success bg-success-light">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <span class="item-text">Receita</span>
+      </a>
+    </li>
+
+    <!-- Opção Despesa cartão -->
+    <li>
+      <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+        <div class="icon-box text-info bg-info-light">
+          <i class="bi bi-credit-card"></i>
+        </div>
+        <span class="item-text">Despesa cartão</span>
+      </a>
+    </li>
+
+    <!-- Opção Transferência -->
+    <li>
+      <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+        <div class="icon-box text-primary bg-primary-light">
+          <i class="bi bi-arrow-left-right"></i>
+        </div>
+        <span class="item-text">Transferência</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+  <!-- Itens de Navegação -->
+  <ul class="nav flex-column mb-auto">
+    <li class="nav-item">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-house-door me-3"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/contas" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-bank me-3"></i> Contas
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/transacoes" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-list-task me-3"></i> Transações
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-credit-card me-3"></i> Cartões de crédito
+      </a>
+    </li>
+    <li class="nav-item">
+    <a routerLink="/planejamento" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-flag me-3"></i> Planejamento
+    </a>
+  </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-pie-chart me-3"></i> Relatórios
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-three-dots me-3"></i> Mais opções
+      </a>
+    </li>
+  </ul>
+
+  <!-- Rodapé do Menu -->
+  <ul class="nav flex-column border-top pt-3">
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-gear me-3"></i> Configurações
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-question-circle me-3"></i> Central de Ajuda
+      </a>
+    </li>
+  </ul>
+
+</div>
+<app-nova-transacao></app-nova-transacao>

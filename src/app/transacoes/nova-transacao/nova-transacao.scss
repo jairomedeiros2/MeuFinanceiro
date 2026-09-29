@@ -1,0 +1,78 @@
+$green-success: #4ade80;
+$green-active: #22c55e;
+$text-dark: #333333;
+
+.extra-small {
+  font-size: 0.75rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// Efeito de transição na modal para redimensionamento suave
+.transition-all {
+  transition: max-width 0.3s ease-in-out;
+}
+
+// Customização de linha divisória responsiva para telas MD+
+@media (min-width: 768px) {
+  .border-end-md {
+    border-end: 1px solid #edf2f7 !important;
+  }
+}
+
+// Estilo dos inputs sem bordas (Estilo Linha Inferior)
+.custom-input-group {
+  .form-control, .form-select {
+    background-color: transparent;
+    color: #4f4f4f;
+    font-size: 0.95rem;
+
+    &::placeholder {
+      color: #bdbdbd;
+    }
+  }
+}
+
+// Customização do Switch Ativo (Verde)
+.form-check-input {
+  width: 2.5em;
+  height: 1.25em;
+  background-color: #e2e8f0;
+  border-color: transparent;
+
+  &:checked {
+    border-color: transparent;
+
+    &.switch-success {
+      background-color: $green-success;
+    }
+    &.switch-gray {
+      background-color: #94a3b8;
+    }
+  }
+}
+
+// Botões redondos de seleção de data
+.btn-date {
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  &.btn-success {
+    background-color: $green-active;
+    border-color: $green-active;
+  }
+}
+
+// Botão de salvar no rodapé
+.btn-salvar {
+  background-color: $green-active;
+  border: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background-color: darken($green-active, 5%);
+  }
+}

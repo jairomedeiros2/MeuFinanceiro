@@ -1,0 +1,72 @@
+{
+  "transacoes": [
+    {
+      "id": "1",
+      "valor": "12,20",
+      "moeda": "BR",
+      "data": "23/09/2026",
+      "descricao": "salário",
+      "categoria": "salário",
+      "lancamentoEfetivado": true,
+      "tag": null,
+      "conta": "Itau",
+      "ignorarTransacao": false,
+      "observacao": "teste",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": null
+    },
+    {
+      "id": "2",
+      "valor": "12,20",
+      "moeda": "BR",
+      "data": "23/09/2026",
+      "descricao": "salário",
+      "categoria": "salário",
+      "lancamentoEfetivado": true,
+      "tag": null,
+      "conta": "Itau",
+      "ignorarTransacao": false,
+      "observacao": "teste",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": null
+    },
+    {
+      "valor": "25,00",
+      "moeda": "BR",
+      "data": "24/09/2026",
+      "descricao": "",
+      "categoria": "salário",
+      "lancamentoEfetivado": false,
+      "tag": null,
+      "conta": "Itau",
+      "ignorarTransacao": false,
+      "observacao": "",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": null,
+      "id": "1kqWOPkm7yg"
+    },
+    {
+      "valor": "10,00",
+      "moeda": "BR",
+      "data": "24/09/2026",
+      "descricao": "Teste 01",
+      "categoria": "salário",
+      "lancamentoEfetivado": true,
+      "tag": null,
+      "conta": "Caixa",
+      "ignorarTransacao": false,
+      "observacao": "Obs 01",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": null,
+      "id": "WbGPteZhgxI"
+    }
+  ]
+}

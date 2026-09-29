@@ -1,0 +1,187 @@
+<!-- Estrutura Principal da Modal Bootstrap -->
+<div class="modal fade" id="modalNovaTransacao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered transition-all" [ngClass]="exibirMaisDetalhes ? 'modal-xl' : 'modal-md'">
+    <div class="modal-content border-0 rounded-4 shadow p-3">
+
+      <!-- Cabeçalho -->
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-dark" id="modalLabel">Nova receita</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Corpo da Modal -->
+      <div class="modal-body">
+        <form>
+          <div class="row g-4">
+
+            <!-- COLUNA DA ESQUERDA (Campos Principais) -->
+            <div [ngClass]="exibirMaisDetalhes ? 'col-12 col-md-6 border-end-md pe-md-4' : 'col-12'">
+
+              <!-- Campo Valor Grande -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2">
+                <i class="bi bi-grid-3x3-gap text-muted me-3 fs-5"></i>
+                <span class="currency-label text-success fw-bold me-2 fs-4">R$</span>
+                <input type="text" name="valor"
+                class="form-control valor-input text-success fw-bold border-0 p-0 shadow-none fs-4" value="1.200,00">
+                <select name="moeda"
+                class="form-select border-0 p-0 bg-transparent text-muted text-end shadow-none w-auto fs-6">
+                  <option selected>BRL ⌃</option>
+                </select>
+              </div>
+
+              <!-- Switch "Foi recebida" -->
+              <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-check2-circle text-muted me-3 fs-5"></i>
+                  <span class="text-secondary">Foi recebida</span>
+                </div>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input switch-success shadow-none cursor-pointer"
+                  name="lancamentoEfetivado" type="checkbox" checked>
+                </div>
+              </div>
+
+              <!-- Filtro de Datas (Hoje, Ontem, Outros) -->
+              <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                <i class="bi bi-calendar4 text-muted me-3 fs-5"></i>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-date btn-success rounded-pill px-3 py-1 btn-sm">Hoje</button>
+                  <button type="button" class="btn btn-date btn-light border text-secondary rounded-pill px-3 py-1 btn-sm">Ontem</button>
+                  <button type="button" class="btn btn-date btn-light border text-secondary rounded-pill px-3 py-1 btn-sm">Outros...</button>
+                </div>
+              </div>
+
+              <!-- Campo Descrição -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2 justify-content-between">
+                <div class="d-flex align-items-center flex-grow-1">
+                  <i class="bi bi-file-earmark-text text-muted me-3 fs-5"></i>
+                  <input type="text" class="form-control border-0 p-0 shadow-none text-secondary"
+                  [(ngModel)]="novaTransacao.descricao"
+                  name="descricao"
+                  placeholder="Descrição" value="Salário">
+                </div>
+                <i class="bi bi-heart text-muted cursor-pointer fs-5"></i>
+              </div>
+
+              <!-- Select Categoria -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2">
+                <i class="bi bi-bookmark text-muted me-3 fs-5"></i>
+                <div class="d-flex align-items-center flex-grow-1">
+                  <span class="badge border border-danger text-danger bg-transparent py-1 px-2 rounded-2 me-2 font-monospace extra-small">
+                    <i class="bi bi-wallet2 me-1"></i> Salário
+                  </span>
+                </div>
+                <i class="bi bi-chevron-down text-muted fs-6"></i>
+              </div>
+
+              <!-- Select Conta -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2">
+                <i class="bi bi-bank text-muted me-3 fs-5"></i>
+                <div class="d-flex align-items-center flex-grow-1">
+                  <span class="badge border border-info text-info bg-transparent py-1 px-2 rounded-2 me-2 font-monospace extra-small">
+                    <i class="bi bi-credit-card me-1"></i> Carteira
+                  </span>
+                </div>
+                <i class="bi bi-chevron-down text-muted fs-6"></i>
+              </div>
+
+              <!-- Switch "Ignorar transação" -->
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-info-circle text-muted me-3 fs-5"></i>
+                  <span class="text-secondary small">Ignorar transação</span>
+                </div>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input switch-gray shadow-none cursor-pointer"
+                  name="ignorarTransacao" type="checkbox">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- COLUNA DA DIREITA (Mais Detalhes - Vermelho na imagem) -->
+            <div class="col-12 col-md-6 ps-md-4" *ngIf="exibirMaisDetalhes">
+
+              <!-- Campo Tags -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2 justify-content-between">
+                <div class="d-flex align-items-center flex-grow-1">
+                  <i class="bi bi-tag text-muted me-3 fs-5"></i>
+                  <input type="text" name="tags"
+                  class="form-control border-0 p-0 shadow-none text-secondary" placeholder="Tags" disabled>
+                </div>
+                <i class="bi bi-chevron-down text-muted fs-6"></i>
+              </div>
+
+              <!-- Campo Observação -->
+              <div class="d-flex align-items-center mb-4 custom-input-group border-bottom pb-2">
+                <i class="bi bi-pencil text-muted me-3 fs-5"></i>
+                <input type="text" class="form-control border-0 p-0 shadow-none text-secondary"
+                [(ngModel)]="novaTransacao.observacao"
+                name="observacao"
+                placeholder="Observação">
+              </div>
+
+              <!-- Switch Receita Fixa -->
+              <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-pin text-muted me-3 fs-5"></i>
+                  <span class="text-secondary">Receita fixa</span>
+                </div>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input switch-gray shadow-none cursor-pointer"
+                  name="lancamentoFixo" type="checkbox">
+                </div>
+              </div>
+
+              <!-- Switch Repetir -->
+              <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-arrow-repeat text-muted me-3 fs-5"></i>
+                  <span class="text-secondary">Repetir</span>
+                </div>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input switch-gray shadow-none cursor-pointer"
+                  name="repetirTransacao" type="checkbox" checked>
+                </div>
+              </div>
+
+              <!-- Inputs de Repetição (Vezes / Meses) -->
+              <div class="row g-3">
+                <div class="col-6 border-bottom pb-2">
+                  <input type="number" nome="repetirVezes"
+                  class="form-control border-0 p-0 shadow-none text-secondary fw-semibold" value="2">
+                  <span class="text-muted extra-small d-block mt-1">vezes</span>
+                </div>
+                <div class="col-6 border-bottom pb-2 d-flex align-items-center justify-content-between">
+                  <div>
+                    <input type="text" name="repetirTempo"
+                    class="form-control border-0 p-0 shadow-none text-secondary fw-semibold bg-transparent" value="Meses" readonly>
+                  </div>
+                  <i class="bi bi-chevron-down text-muted fs-6"></i>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- Rodapé / Botões de Ação -->
+      <div class="modal-footer border-0 d-flex justify-content-between align-items-center pt-3">
+        <!-- Botão Alternador Menos/Mais Detalhes -->
+        <button type="button" class="btn btn-link text-dark fw-semibold text-decoration-none shadow-none p-0 d-flex align-items-center gap-1" (click)="alternarDetalhes()">
+          {{ exibirMaisDetalhes ? 'Menos detalhes' : 'Mais detalhes' }}
+          <i class="bi" [ngClass]="exibirMaisDetalhes ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
+        </button>
+
+        <!-- Botão Salvar Principal -->
+        <button type="button" (click)="enviarDados()" name="btnSalvar"
+        class="btn btn-salvar px-5 py-2 fw-semibold text-white rounded-pill">
+          SALVAR
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

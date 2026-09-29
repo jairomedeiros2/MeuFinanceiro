@@ -1,0 +1,133 @@
+<!-- Cabeçalho da Tela de Transações -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <span class="badge bg-primary px-4 py-2 rounded-pill fs-6 fw-semibold">
+      <i class="bi bi-arrow-left-right me-2"></i> Transações
+    </span>
+  </div>
+
+  <!-- Ícones de Ação Superiores -->
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-search"></i></button>
+    <button class="btn btn-light rounded-circle shadow-sm border border-danger"
+      data-bs-toggle="modal"
+      data-bs-target="#modalFiltroTransacoes"><i class="bi bi-funnel"></i></button>
+    <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-three-dots-vertical"></i></button>
+  </div>
+</div>
+
+<!-- Filtro de Meses Centralizado -->
+<div class="d-flex align-items-center justify-content-center gap-4 mb-4">
+  <button class="btn btn-link text-secondary p-0"><i class="bi bi-chevron-left fs-4"></i></button>
+  <span class="badge bg-light text-dark px-4 py-2 rounded-pill fw-semibold fs-6 border">Junho 2021</span>
+  <button class="btn btn-link text-secondary p-0"><i class="bi bi-chevron-right fs-4"></i></button>
+</div>
+
+<div class="row g-4">
+  <!-- Coluna da Tabela (Esquerda) -->
+  <div class="col-12 col-xl-9">
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+      <div class="table-responsive">
+        <table class="table align-middle custom-table mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Situação</th>
+              <th scope="col">Data <i class="bi bi-arrow-down small"></i></th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Conta</th>
+              <th scope="col">Valor</th>
+              <th scope="col" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop dinâmico lendo os dados do transacoes.json -->
+            @for (item of listaTransacoes(); track item.id) {
+              <tr>
+                <!-- Situação -->
+                <td>
+                  @if (item.lancamentoEfetivado) {
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                  } @else {
+                    <i class="bi bi-clock-history text-warning fs-5"></i>
+                  }
+                </td>
+                <!-- Data -->
+                <td class="text-muted">{{ item.data }}</td>
+                <!-- Descrição -->
+                <td class="fw-medium text-dark text-capitalize">{{ item.descricao }}</td>
+                <!-- Categoria -->
+                <td>
+                  <span class="badge bg-dark-purple px-2 py-1 rounded-3 small">
+                    {{ item.categoria }}
+                  </span>
+                </td>
+                <!-- Conta -->
+                <td class="text-secondary">{{ item.Conta }}</td>
+                <!-- Valor (Muda de cor dinamicamente se for positivo/negativo) -->
+                <td [ngClass]="item.categoria === 'salário' ? 'text-success' : 'text-danger'" class="fw-semibold">
+                  R$ {{ item.valor }}
+                </td>
+                <!-- Ações -->
+                <td>
+                  <div class="d-flex justify-content-center gap-2 text-muted">
+                    <i class="bi bi-pencil cursor-pointer hover-purple"></i>
+                    <i class="bi bi-trash cursor-pointer hover-danger"></i>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td>
+                  Lista Vazia
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coluna dos Cards de Saldo (Direita) -->
+  <div class="col-12 col-xl-3 d-flex flex-column gap-3">
+    <!-- Card Saldo Atual -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <span class="text-muted small d-block">Saldo atual</span>
+        <h4 class="fw-bold text-dark m-0">R$ 2.990,00</h4>
+      </div>
+      <div class="icon-circle bg-primary text-white"><i class="bi bi-bank"></i></div>
+    </div>
+
+    <!-- Card Receitas -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <span class="text-muted small d-block">Receitas</span>
+        <h4 class="fw-bold text-dark m-0">R$ 3.000,00</h4>
+      </div>
+      <div class="icon-circle bg-success text-white"><i class="bi bi-arrow-up"></i></div>
+    </div>
+
+    <!-- Card Despesas -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <span class="text-muted small d-block">Despesas</span>
+        <h4 class="fw-bold text-dark m-0">R$ 630,00</h4>
+      </div>
+      <div class="icon-circle bg-danger text-white"><i class="bi bi-arrow-down"></i></div>
+    </div>
+
+    <!-- Card Balanço Mensal -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <span class="text-muted small d-block">Balanço mensal</span>
+        <h4 class="fw-bold text-dark m-0">R$ 2.370,00</h4>
+      </div>
+      <div class="icon-circle bg-teal text-white"><i class="bi bi-scales"></i></div>
+    </div>
+  </div>
+</div>
+
+<app-filtro-transacoes></app-filtro-transacoes>

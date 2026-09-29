@@ -1,0 +1,41 @@
+$purple-primary: #5c16ca;
+
+.btn-purple-dropdown {
+  background-color: $purple-primary;
+  border-radius: 12px;
+  font-weight: 500;
+  border: none;
+  font-size: 0.95rem;
+
+  &:hover {
+    background-color: darken($purple-primary, 8%);
+  }
+}
+
+.btn-outline-purple-light {
+  color: $purple-primary;
+  border: 1px solid lighten($purple-primary, 35%);
+  background-color: #fcfaff;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background-color: lighten($purple-primary, 42%);
+    border-color: $purple-primary;
+  }
+}
+
+.btn-light-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #f8f9fa;
+  border: none;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

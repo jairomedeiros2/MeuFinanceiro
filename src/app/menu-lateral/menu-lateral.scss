@@ -1,0 +1,143 @@
+// Variáveis de Cores (Paleta Mobills)
+$purple-primary: #5c16ca;
+$purple-light: #f3ebff;
+$text-muted: #828282;
+$text-dark: #333333;
+
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  // Estilização do Logo
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 8px;
+
+    .logo-main {
+      font-size: 2rem;
+      font-weight: 800;
+      color: $purple-primary;
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: $text-dark;
+      align-self: flex-end;
+      margin-right: 40px; // Alinhamento abaixo do nome principal
+    }
+  }
+
+  // Botão "Novo" customizado
+  .btn-novo {
+    background-color: $purple-primary;
+    color: white;
+    border-radius: 50px;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    width: 100%;
+    border: none;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: darken($purple-primary, 8%);
+    }
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+
+  // Links do Menu Lateral
+  .nav-item {
+    margin-bottom: 4px;
+
+    .nav-link {
+      color: $text-muted;
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      i {
+        font-size: 1.25rem;
+        color: $text-muted;
+      }
+
+      &:hover {
+        color: $purple-primary;
+        background-color: #f9f9f9;
+
+        i {
+          color: $purple-primary;
+        }
+      }
+
+      // Estado do menu selecionado (como "Planejamento" na imagem)
+      &.active {
+        color: $purple-primary !important;
+        font-weight: 600;
+        background-color: transparent; // O Mobills usa apenas a cor ativa no texto na versão web
+
+        i {
+          color: $purple-primary !important;
+        }
+      }
+    }
+  }
+}
+
+// Remove a seta padrão do dropdown no botão "Novo"
+.btn-novo::after {
+  display: none !important;
+}
+
+// Customização do Menu Flutuante
+.dropdown-novo-menu {
+  width: calc(100% - 16px); // Ajusta a largura para alinhar com o botão
+  min-width: 200px;
+  background-color: #ffffff;
+  margin-left: 170px !important;
+
+  .dropdown-item {
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    .item-text {
+      font-size: 0.95rem;
+      color: #555555;
+      font-weight: 400;
+    }
+
+    // Caixa container para os mini ícones
+    .icon-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    // Cores específicas para cada tipo de ação baseado na imagem
+    .bg-danger-light { background-color: #fff1f2; }
+    .bg-success-light { background-color: #f0fdf4; }
+    .bg-info-light { background-color: #f0f9ff; }
+    .bg-primary-light { background-color: #eff6ff; }
+  }
+}

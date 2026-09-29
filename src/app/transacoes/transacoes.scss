@@ -1,0 +1,44 @@
+$purple-primary: #5c16ca;
+
+.bg-dark-purple {
+  background-color: #1e1b4b;
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.bg-teal {
+  background-color: #0f766e;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.custom-table {
+  font-size: 0.9rem;
+
+  thead th {
+    color: #828282;
+    font-weight: 500;
+    border-bottom: 1px solid #edf2f7;
+    padding: 14px 8px;
+  }
+
+  tbody td {
+    padding: 16px 8px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+.hover-purple:hover { color: $purple-primary; }
+.hover-danger:hover { color: #ef4444; }

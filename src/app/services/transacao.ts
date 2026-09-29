@@ -1,0 +1,35 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Service, signal } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Service()
+export class TransacaoService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/transacoes';
+
+  filtrosAtivos = signal<any>({
+    conta: 'Itau', // Valor padrão da imagem
+    tag: '',
+    lancamentoEfetivado: null,
+    tipo: '',
+    dataInicio: '2026-09-20',
+    dataFim: '2026-09-24'
+  });
+
+  limparFiltro(chave: string): void {
+    this.filtrosAtivos.update(filtros => ({
+      ...filtros,
+      [chave]: null
+    }));
+  }
+
+  getTransacoes(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  // Inserir uma nova transação (usado na Modal ao clicar em Salvar)
+  salvarTransacao(transacao: any): Observable<any> {
+    console.log('salvarTransacao:', transacao);
+    return this.http.post<any>(this.apiUrl, transacao);
+  }
+}

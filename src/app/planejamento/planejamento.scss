@@ -1,0 +1,75 @@
+$purple-primary: #5c16ca;
+$purple-light: #f3ebff;
+
+.text-purple { color: $purple-primary; }
+.bg-purple-light { background-color: $purple-light; }
+
+.extra-small {
+  font-size: 0.78rem;
+}
+
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  &.bg-light-green { background-color: #a3e635; }
+}
+
+// Estilos customizados da tabela
+.custom-table {
+  font-size: 0.88rem;
+  color: #4f4f4f;
+
+  thead th {
+    color: #828282;
+    font-weight: 500;
+    border-bottom: 1px solid #edf2f7;
+    padding: 12px 8px;
+  }
+
+  tbody td {
+    padding: 16px 8px;
+    border-bottom: 1px solid #edf2f7;
+  }
+
+  .bg-light-row {
+    background-color: #fafafa;
+  }
+
+  .icon-shape {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .bg-info-light { background-color: #e0f2fe; }
+}
+
+// Estilos dos Cards Laterais da Direita
+.summary-card {
+  min-height: 90px;
+
+  .icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+
+    &.bg-success-dark { background-color: #15803d; }
+    &.bg-primary { background-color: #3b82f6; }
+  }
+}
+
+.progress {
+  background-color: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
