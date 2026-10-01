@@ -42,31 +42,32 @@
           </thead>
           <tbody>
             <!-- Loop dinâmico lendo os dados do transacoes.json -->
-            @for (item of listaTransacoes(); track item.id) {
+            @for (transacao of listaTransacoes(); track transacao.id) {
               <tr>
                 <!-- Situação -->
                 <td>
-                  @if (item.lancamentoEfetivado) {
+                  @if (transacao.lancamentoEfetivado) {
                     <i class="bi bi-check-circle-fill text-success fs-5"></i>
                   } @else {
                     <i class="bi bi-clock-history text-warning fs-5"></i>
                   }
                 </td>
                 <!-- Data -->
-                <td class="text-muted">{{ item.data }}</td>
+                <td class="text-muted">{{ transacao.data }}</td>
                 <!-- Descrição -->
-                <td class="fw-medium text-dark text-capitalize">{{ item.descricao }}</td>
+                <td class="fw-medium text-dark text-capitalize">{{ transacao.descricao }}</td>
                 <!-- Categoria -->
                 <td>
                   <span class="badge bg-dark-purple px-2 py-1 rounded-3 small">
-                    {{ item.categoria }}
+                    {{ transacao.categoria }}
                   </span>
                 </td>
                 <!-- Conta -->
-                <td class="text-secondary">{{ item.Conta }}</td>
+                <td class="text-secondary">{{ transacao.conta }}</td>
                 <!-- Valor (Muda de cor dinamicamente se for positivo/negativo) -->
-                <td [ngClass]="item.categoria === 'salário' ? 'text-success' : 'text-danger'" class="fw-semibold">
-                  R$ {{ item.valor }}
+                <td [ngClass]="transacao.categoria === 'salário' ? 'text-success' : 'text-danger'" class="fw-semibold">
+                  {{ transacao.valor | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  <!-- R$ {{ transacao.valor}} -->
                 </td>
                 <!-- Ações -->
                 <td>
@@ -79,8 +80,8 @@
             }
             @empty {
               <tr>
-                <td>
-                  Lista Vazia
+                <td colspan="7" class="text-center text-muted py-4">
+                  Nenhuma transação encontrada para os filtros selecionados.
                 </td>
               </tr>
             }
@@ -96,7 +97,7 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Saldo atual</span>
-        <h4 class="fw-bold text-dark m-0">R$ 2.990,00</h4>
+        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.saldoAtual | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</h4>
       </div>
       <div class="icon-circle bg-primary text-white"><i class="bi bi-bank"></i></div>
     </div>
@@ -105,7 +106,7 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Receitas</span>
-        <h4 class="fw-bold text-dark m-0">R$ 3.000,00</h4>
+        <h4 class="fw-bold text-dark m-0"> {{ cardsLateral.receitas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-success text-white"><i class="bi bi-arrow-up"></i></div>
     </div>
@@ -114,7 +115,7 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Despesas</span>
-        <h4 class="fw-bold text-dark m-0">R$ 630,00</h4>
+        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.despesas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-danger text-white"><i class="bi bi-arrow-down"></i></div>
     </div>
@@ -123,7 +124,7 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Balanço mensal</span>
-        <h4 class="fw-bold text-dark m-0">R$ 2.370,00</h4>
+        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.balancoMensal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-teal text-white"><i class="bi bi-scales"></i></div>
     </div>

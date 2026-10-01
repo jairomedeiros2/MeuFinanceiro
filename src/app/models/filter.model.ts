@@ -18,3 +18,12 @@ export interface TransactionFilter {
   accountIds: string[];
   tagIds: string[];
 }
+
+export interface TransacoesFilter {
+  contas: string[];
+  tag: string;
+  lancamentoEfetivado: boolean | null;
+  tipo: string;
+  dataInicio: string;
+  dataFim: string;
+}

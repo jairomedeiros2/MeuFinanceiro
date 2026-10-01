@@ -1,27 +1,30 @@
-import { ToString } from './../../../node_modules/type-fest/source/internal/string.d';
-import { Includes } from './../../../node_modules/type-fest/source/includes.d';
-import { IsNull } from './../../../node_modules/type-fest/source/is-null.d';
+// import { ToString } from './../../../node_modules/type-fest/source/internal/string.d';
+// import { Includes } from './../../../node_modules/type-fest/source/includes.d';
+// import { IsNull } from './../../../node_modules/type-fest/source/is-null.d';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { TransacaoService } from '../services/transacao'; // Ajuste o caminho do seu serviço
 import { FiltroTransacoes } from './filtro-transacoes/filtro-transacoes';
 
 @Component({
   selector: 'app-transacoes',
   standalone: true,
-  imports: [CommonModule, FiltroTransacoes],
+  imports: [CommonModule, FiltroTransacoes, CurrencyPipe],
   templateUrl: './transacoes.html',
-  styleUrls: ['./transacoes.scss'] // ou .css caso não use scss nesta pasta
+  styleUrls: ['./transacoes.scss'],
 })
 export class Transacoes implements OnInit {
   private transacaoService = inject(TransacaoService);
   private dadosBrutos = signal<any[]>([]);
 
-  // listaTransacoes: any[] = [];
-  // listaTransacoes = signal<any[]>([]); //Com Signal criamos uma 'variavel inteligente' que monitora as mudanças por si mesma, tirando o problema do atraso na api.
+  cardsLateral = {
+    saldoAtual: 0.0,
+    receitas: 0.0,
+    despesas: 0.0,
+    balancoMensal: 0.0,
+  };
 
   ngOnInit(): void {
-    console.log('carregarTransacoes: ', this.listaTransacoes);
     this.carregarTransacoes();
   }
 
@@ -29,11 +32,21 @@ export class Transacoes implements OnInit {
     const lista = this.dadosBrutos();
     const filtro = this.transacaoService.filtrosAtivos();
 
-    return lista.filter(item => {
-      //Se filtro não conter a conta remove a transação da lista.
-      if(filtro.conta && filtro.conta.toLowerCase().indexOf(item.conta.toLowerCase()) == -1){
+    return lista.filter((item) => {
+      console.log('listaTransacoes - item: ', item);
+      // 1. Filtro por Contas
+      if (filtro.contas && filtro.contas.length > 0) {
+        if (!filtro.contas.includes(item.conta)) {
           return false;
+        }
       }
+
+       if (filtro.tag) {
+         if (!filtro.tag.includes(item.tag)) {
+           return false;
+         }
+       }
+
       // 2. Filtragem por lançamento efetivado
       if (filtro.lancamentoEfetivado) {
         const isLancamentoEfetivado = !item.lancamentoEfetivado;
@@ -56,11 +69,25 @@ export class Transacoes implements OnInit {
           if (dataItem > dataLimiteFim) return false;
         }
       }
+
+      if(item.valor > 0){
+        this.cardsLateral.receitas += item.valor;
+      }
+      else{
+        this.cardsLateral.despesas -= item.valor;
+      }
+      //Calculo do Saldo atual = Saldo Inicial das contas ativas + (Todas Receitas Efetivadas + Transferências de entrada)  - (Todas Despesas Efetivadas +Transferências de saída)
+      this.cardsLateral.saldoAtual += item.valor;
+      this.cardsLateral.balancoMensal += item.valor;
+
+      // console.log('saldo valor: ', item.valor);
+      // console.log('saldo receitas: ', this.cardsLateral.receitas);
+      // console.log('saldo despesas: ', this.cardsLateral.despesas);
       return true;
     });
   });
 
-// Converte "23/09/2026" do seu JSON para um objeto Date real comparável
+  // Converte "23/09/2026" do seu JSON para um objeto Date real comparável
   private converterDataJson(dataString: string): Date {
     const partes = dataString.split('/');
     const dia = parseInt(partes[0], 10);
@@ -72,15 +99,12 @@ export class Transacoes implements OnInit {
   carregarTransacoes(): void {
     this.transacaoService.getTransacoes().subscribe({
       next: (dados) => {
-        // this.listaTransacoes = dados;
-        // this.listaTransacoes.set(dados);
         this.dadosBrutos.set(dados);
-        console.log('carregarTransacoes2: ', this.listaTransacoes);
-        console.log('carregarTransacoes3: ', this.dadosBrutos);
+        // console.log('carregarTransacoes2: ', dados);
       },
       error: (erro) => {
         console.error('Erro ao buscar transações do banco:', erro);
-      }
+      },
     });
   }
 }

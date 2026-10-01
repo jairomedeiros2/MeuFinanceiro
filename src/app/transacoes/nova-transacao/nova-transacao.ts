@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TransacaoService } from '../../services/transacao';
+import { Transacao } from '../../models/transacao.model';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -16,21 +17,22 @@ export class NovaTransacao {
   exibirMaisDetalhes: boolean = true; // Controla se a seção estendida (lado direito) está visível
 
  // Objeto modelo espelhando seu transacoes.json
-  novaTransacao: any = {
-    valor: "0,00",
+  novaTransacao: Transacao = {
+    id: 0,
+    valor: 0.00,
     moeda: "BR",
-    data: "24/09/2026",
+    data: "",
     descricao: "",
-    categoria: "salário",
+    categoria: "",
     lancamentoEfetivado: true,
-    tag: null,
-    conta: "Itau",
+    tag: '',
+    conta: "",
     ignorarTransacao: false,
     observacao: "",
     lancamentoFixo: false,
     repetirTransacao: false,
     repetirVezes: 0,
-    repetirTempo: null
+    repetirTempo: false
   };
 
   alternarDetalhes() {
@@ -39,6 +41,13 @@ export class NovaTransacao {
 
   // Função chamada no clique do botão SALVAR
   enviarDados() {
+    // const valorDigitado = this.novaTransacao.valor;
+    // const valorLimpo = valorDigitado
+    //   .replace(/[R$\s.]/g, '')
+    //   .replace(',', '.');
+    // const valorNumerico = parseFloat(valorLimpo);
+    // this.novaTransacao = valorNumerico;
+
     this.transacaoService.salvarTransacao(this.novaTransacao).subscribe({
       next: (resposta) => {
         console.log('Salvo com sucesso no JSON!', resposta);

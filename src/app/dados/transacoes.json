@@ -2,7 +2,7 @@
   "transacoes": [
     {
       "id": "1",
-      "valor": "12,20",
+      "valor": 13.3,
       "moeda": "BR",
       "data": "23/09/2026",
       "descricao": "salário",
@@ -19,7 +19,7 @@
     },
     {
       "id": "2",
-      "valor": "12,20",
+      "valor": 12,
       "moeda": "BR",
       "data": "23/09/2026",
       "descricao": "salário",
@@ -35,7 +35,7 @@
       "repetirTempo": null
     },
     {
-      "valor": "25,00",
+      "valor": 25,
       "moeda": "BR",
       "data": "24/09/2026",
       "descricao": "",
@@ -52,7 +52,7 @@
       "id": "1kqWOPkm7yg"
     },
     {
-      "valor": "10,00",
+      "valor": 10,
       "moeda": "BR",
       "data": "24/09/2026",
       "descricao": "Teste 01",
@@ -67,6 +67,75 @@
       "repetirVezes": 0,
       "repetirTempo": null,
       "id": "WbGPteZhgxI"
+    },
+    {
+      "id": "E9nSl5GzU-I",
+      "valor": -1.10,
+      "moeda": "BR",
+      "data": "25/09/2026",
+      "descricao": "",
+      "categoria": "",
+      "lancamentoEfetivado": true,
+      "tag": "",
+      "conta": "Caixa",
+      "ignorarTransacao": false,
+      "observacao": "",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": false
+    },
+    {
+      "id": "E9nSl5ezU-I",
+      "valor": -2.20,
+      "moeda": "BR",
+      "data": "25/09/2026",
+      "descricao": "",
+      "categoria": "",
+      "lancamentoEfetivado": true,
+      "tag": "",
+      "conta": "Caixa",
+      "ignorarTransacao": false,
+      "observacao": "",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": false
+    },
+    {
+      "id": "E9nSl5GwU-I",
+      "valor": -3.30,
+      "moeda": "BR",
+      "data": "25/09/2026",
+      "descricao": "",
+      "categoria": "",
+      "lancamentoEfetivado": true,
+      "tag": "",
+      "conta": "Caixa",
+      "ignorarTransacao": false,
+      "observacao": "",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": false
+    },
+    {
+      "id": "E9nSl5GqU-I",
+      "valor": -4.40,
+      "moeda": "BR",
+      "data": "25/09/2026",
+      "descricao": "",
+      "categoria": "",
+      "lancamentoEfetivado": true,
+      "tag": "",
+      "conta": "Caixa",
+      "ignorarTransacao": false,
+      "observacao": "",
+      "lancamentoFixo": false,
+      "repetirTransacao": false,
+      "repetirVezes": 0,
+      "repetirTempo": false
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
