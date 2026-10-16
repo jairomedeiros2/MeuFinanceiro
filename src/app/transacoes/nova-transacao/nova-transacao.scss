@@ -17,14 +17,18 @@ $text-dark: #333333;
 
 // Customização de linha divisória responsiva para telas MD+
 @media (min-width: 768px) {
-  .border-end-md {
-    border-end: 1px solid #edf2f7 !important;
-  }
+  // .border-end-md {
+  //   border-inline: 1px solid #edf2f7 !important;
+  // }
+  // div[name='seletorTipoTransacao'] {
+  //   width: 50%;
+  // }
 }
 
 // Estilo dos inputs sem bordas (Estilo Linha Inferior)
 .custom-input-group {
-  .form-control, .form-select {
+  .form-control,
+  .form-select {
     background-color: transparent;
     color: #4f4f4f;
     font-size: 0.95rem;

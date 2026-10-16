@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalFiltroTransacoes" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalFiltroTransacoes" tabindex="-1" aria-hidden="true" (show.bs.modal)="sincronizar()">
   <div class="modal-dialog modal-dialog-slideout">
     <div class="modal-content border-0 h-100 rounded-start-4 shadow">
 
@@ -13,7 +13,8 @@
           <button class="nav-link active w-100 fw-semibold text-uppercase py-2" id="novo-tab" data-bs-toggle="tab"
             type="button" role="tab">Novo Filtro</button>
         </li>
-        <li class="nav-item flex-grow-1 text-center" role="presentation">
+        <!-- Filtros Salvos inativo - à implementar futuramente -->
+        <li class="nav-item flex-grow-1 text-center" role="presentation" hidden>
           <button class="nav-link w-100 fw-semibold text-uppercase py-2 text-muted" id="salvos-tab" data-bs-toggle="tab"
             type="button" role="tab">Filtros Salvos</button>
         </li>
@@ -22,42 +23,41 @@
       <!-- Corpo do Formulário -->
       <div class="modal-body px-4 py-3 overflow-auto">
         <form>
-          <!-- Filtro de Contas (Múltiplo + Select Ocupando 100% da Largura) -->
-          <div class="position-relative mb-4">
+
+          <!-- Filtro de Contas -->
+          <div class="position-relative mb-4 campo-dropdown">
             <label class="form-label text-muted small fw-semibold mb-1">Contas</label>
 
             <div
               class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
-              (click)="alterarDropdown('contas')"
-              id="imputContas">
+              (click)="alterarDropdown('contas')" id="imputContas">
 
               <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
                 @for (conta of filtros.contas; track conta) {
                 <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
                   <span class="account-dot" [style.background-color]="getCorBanco(conta)"></span>
                   <span>{{ conta }}</span>
-                  <i class="bi bi-x-circle-fill btn-remove-tag" (click)="removerConta(conta, $event)"></i>
+                  <i class="bi bi-x-circle-fill btn-remove-option" (click)="removerConta(conta, $event)"></i>
                 </span>
                 } @empty {
                 <span class="text-muted small ps-1">Selecione uma ou mais contas...</span>
                 }
               </div>
-              <i class="bi bi-chevron-down text-muted transition-icon" [class.rotate-180]="dropdownContasAberto"></i>
+              <i class="bi bi-chevron-down text-muted transition-icon" [class.rotate-180]="dropdownAberto === 'contas'"></i>
             </div>
 
             <!-- Listagem de Opções -->
-            @if (dropdownContasAberto) {
-            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3"
-              (mouseleave)="fecharDropdown('contas')">
-              @for (opcao of contasDisponiveis(); track opcao) {
+            @if (dropdownAberto === 'contas') {
+            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
+              @for (conta of contasDisponiveis; track conta) {
               <div
                 class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
-                [class.active-item]="filtros.contas.includes(opcao)" (click)="alterarConta(opcao)">
+                [class.active-item]="filtros.contas.includes(conta)" (click)="alterarSelect('contas', conta, $event)">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="account-dot" [style.background-color]="getCorBanco(opcao)"></span>
-                  <span class="fw-medium small text-dark">{{ opcao }}</span>
+                  <span class="account-dot" [style.background-color]="getCorBanco(conta)"></span>
+                  <span class="fw-medium small text-dark">{{ conta }}</span>
                 </div>
-                @if (filtros.contas.includes(opcao)) {
+                @if (filtros.contas.includes(conta)) {
                 <i class="bi bi-check-lg text-primary fw-bold"></i>
                 }
               </div>
@@ -67,39 +67,36 @@
           </div>
 
           <!-- Filtro de Tags -->
-          <div class="position-relative mb-4">
+          <div class="position-relative mb-4 campo-dropdown">
             <label class="form-label text-muted small fw-semibold mb-1">Tags</label>
 
             <div
               class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
-              (click)="alterarDropdown('tag')"
-              id="imputTags">
+              (click)="alterarDropdown('tag')">
 
               <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
                 @if (filtros.tag) {
                 <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
                   <span>{{ filtros.tag }}</span>
-                  <i class="bi bi-x-circle-fill btn-remove-tag" (click)="alterarTag('')"></i>
+                  <i class="bi bi-x-circle-fill btn-remove-option" (click)="alterarSelect('tag', '', $event)"></i>
                 </span>
                 } @else {
                 <span class="text-muted small ps-1">Selecione uma tags...</span>
                 }
               </div>
-              <i class="bi bi-chevron-down text-muted transition-icon" [class.rotate-180]="dropdownTagsAberto"></i>
+              <i class="bi bi-chevron-down text-muted transition-icon"
+                [class.rotate-180]="dropdownAberto === 'tag'"></i>
             </div>
 
             <!-- Listagem de Opções -->
-            @if (dropdownTagsAberto) {
-            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3"
-              (mouseleave)="fecharDropdown('tag')">
-              @for (opcao of tagsDisponiveis(); track opcao) {
+            @if (dropdownAberto === 'tag') {
+            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
+              @for (opcao of tagsDisponiveis; track opcao) {
               <div
                 class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
-                [class.active-item]="filtros.tag.includes(opcao)" (click)="alterarTag(opcao)">
-                <div class="d-flex align-items-center gap-2">
-                  <span class="fw-medium small text-dark">{{ opcao }}</span>
-                </div>
-                @if (filtros.contas.includes(opcao)) {
+                [class.active-item]="filtros.tag === opcao" (click)="alterarSelect('tag', opcao)">
+                <span class="fw-medium small text-dark">{{ opcao }}</span>
+                @if (filtros.tag === opcao) {
                 <i class="bi bi-check-lg text-primary fw-bold"></i>
                 }
               </div>
@@ -108,35 +105,87 @@
             }
           </div>
 
-
-
-          <!--  -->
           <!-- Filtro de Situações -->
-          <div class="mb-4">
-            <label class="form-label text-muted small mb-1">Situação</label>
-            <div class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border">
-              <div class="d-flex flex-wrap gap-1">
-                @if (svc.filtrosAtivos().lancamentoEfetivado) {
-                <span class="badge badge-gray-tag d-flex align-items-center gap-2">
-                  {{ svc.filtrosAtivos().lancamentoEfetivado }}
-                  <i class="bi bi-x-circle-fill cursor-pointer text-muted-hover"
-                    (click)="svc.limparFiltro('lancamentoEfetivado')"></i>
+          <div class="position-relative mb-4 campo-dropdown">
+            <label class="form-label text-muted small fw-semibold mb-1">Situação</label>
+
+            <div
+              class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
+              (click)="alterarDropdown('situacao')">
+
+              <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
+                @if (filtros.lancamentoEfetivado !== null) {
+                <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
+                  <span>{{ filtros.lancamentoEfetivado ? 'Efetuado' : 'Pendente' }}</span>
+                  <i class="bi bi-x-circle-fill btn-remove-option"
+                    (click)="alterarSelect('situacao', null, $event)"></i>
                 </span>
+                } @else {
+                <span class="text-muted small ps-1">Selecione uma situação...</span>
                 }
               </div>
-              <i class="bi bi-chevron-down text-muted"></i>
+              <i class="bi bi-chevron-down text-muted transition-icon"
+                [class.rotate-180]="dropdownAberto === 'situacao'"></i>
             </div>
+
+            <!-- Listagem de Opções -->
+            @if (dropdownAberto === 'situacao') {
+            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
+              @for (situacao of situacoesDisponiveis; track situacao) {
+              <div
+                class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
+                [class.active-item]="filtros.lancamentoEfetivado === situacao.valor"
+                (click)="alterarSelect('situacao', situacao.valor, $event)">
+                <span class="fw-medium small text-dark">{{ situacao.rotulo }}</span>
+                @if (filtros.lancamentoEfetivado === situacao.valor) {
+                <i class="bi bi-check-lg text-primary fw-bold"></i>
+                }
+              </div>
+              }
+            </div>
+            }
           </div>
 
-          <!-- Filtro de Tipos -->
-          <div class="mb-4">
-            <label class="form-label text-muted small mb-1">Tipos</label>
-            <div class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border">
-              <span class="badge badge-gray-tag d-flex align-items-center gap-2">
-                Despesas <i class="bi bi-x-circle-fill cursor-pointer"></i>
-              </span>
-              <i class="bi bi-chevron-down text-muted"></i>
+          <!-- Filtro de Tipos de Lançamento -->
+          <div class="position-relative mb-4 campo-dropdown">
+            <label class="form-label text-muted small fw-semibold mb-1">Tipo de Lançamento</label>
+
+            <div
+              class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
+              (click)="alterarDropdown('tipo')">
+
+              <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
+                @if (filtros.tipo) {
+                <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
+                  <span>{{ filtros.tipo }}</span>
+                  <i class="bi bi-x-circle-fill btn-remove-option" (click)="alterarSelect('tipo', '', $event)"></i>
+                </span>
+                } @else {
+                <span class="text-muted small ps-1">Selecione um Tipo de Lançamento ...</span>
+                }
+              </div>
+              <i class="bi bi-chevron-down text-muted transition-icon"
+                [class.rotate-180]="dropdownAberto === 'tipo'"></i>
             </div>
+
+            <!-- Listagem de Opções -->
+            @if (dropdownAberto === 'tipo') {
+            <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
+              @for (tipoLancamento of tiposLancamentoDisponiveis; track tipoLancamento) {
+              <div
+                class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
+                [class.active-item]="filtros.tipo === tipoLancamento"
+                (click)="alterarSelect('tipo', tipoLancamento, $event)">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="fw-medium small text-dark">{{ tipoLancamento }}</span>
+                </div>
+                @if (filtros.tipo === tipoLancamento) {
+                <i class="bi bi-check-lg text-primary fw-bold"></i>
+                }
+              </div>
+              }
+            </div>
+            }
           </div>
 
           <!-- Período de Datas (De / Até) -->
@@ -153,14 +202,14 @@
             </div>
           </div>
 
-          <!-- Switch Salvar Personalizado -->
-          <div class="d-flex justify-content-between align-items-center pt-2">
+          <!-- Switch Salvar Personalizado - à implementar futuramente -->
+          <!-- <div class="d-flex justify-content-between align-items-center pt-2" hidden style="display: none;">
             <span class="text-secondary small">Salvar filtro personalizado</span>
             <div class="form-check form-switch m-0">
               <input class="form-check-input switch-blue shadow-none cursor-pointer" type="checkbox" name="salvar"
                 [(ngModel)]="salvarPersonalizado">
             </div>
-          </div>
+          </div> -->
         </form>
       </div>
 
@@ -173,7 +222,6 @@
           APLICAR FILTRO
         </button>
       </div>
-
     </div>
   </div>
 </div>

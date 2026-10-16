@@ -9,8 +9,7 @@
   <!-- Ícones de Ação Superiores -->
   <div class="d-flex align-items-center gap-2">
     <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-search"></i></button>
-    <button class="btn btn-light rounded-circle shadow-sm border border-danger"
-      data-bs-toggle="modal"
+    <button class="btn btn-light rounded-circle shadow-sm border border-danger" data-bs-toggle="modal"
       data-bs-target="#modalFiltroTransacoes"><i class="bi bi-funnel"></i></button>
     <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-three-dots-vertical"></i></button>
   </div>
@@ -18,9 +17,11 @@
 
 <!-- Filtro de Meses Centralizado -->
 <div class="d-flex align-items-center justify-content-center gap-4 mb-4">
-  <button class="btn btn-link text-secondary p-0"><i class="bi bi-chevron-left fs-4"></i></button>
-  <span class="badge bg-light text-dark px-4 py-2 rounded-pill fw-semibold fs-6 border">Junho 2021</span>
-  <button class="btn btn-link text-secondary p-0"><i class="bi bi-chevron-right fs-4"></i></button>
+  <button class="btn btn-link text-secondary p-0" (click)="mesAnterior()"><i
+      class="bi bi-chevron-left fs-4"></i></button>
+  <span class="badge bg-light text-dark px-4 py-2 rounded-pill fw-semibold fs-6 border">{{ rotuloMes() }}</span>
+  <button class="btn btn-link text-secondary p-0" (click)="mesSeguinte()"><i
+      class="bi bi-chevron-right fs-4"></i></button>
 </div>
 
 <div class="row g-4">
@@ -43,47 +44,47 @@
           <tbody>
             <!-- Loop dinâmico lendo os dados do transacoes.json -->
             @for (transacao of listaTransacoes(); track transacao.id) {
-              <tr>
-                <!-- Situação -->
-                <td>
-                  @if (transacao.lancamentoEfetivado) {
-                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                  } @else {
-                    <i class="bi bi-clock-history text-warning fs-5"></i>
-                  }
-                </td>
-                <!-- Data -->
-                <td class="text-muted">{{ transacao.data }}</td>
-                <!-- Descrição -->
-                <td class="fw-medium text-dark text-capitalize">{{ transacao.descricao }}</td>
-                <!-- Categoria -->
-                <td>
-                  <span class="badge bg-dark-purple px-2 py-1 rounded-3 small">
-                    {{ transacao.categoria }}
-                  </span>
-                </td>
-                <!-- Conta -->
-                <td class="text-secondary">{{ transacao.conta }}</td>
-                <!-- Valor (Muda de cor dinamicamente se for positivo/negativo) -->
-                <td [ngClass]="transacao.categoria === 'salário' ? 'text-success' : 'text-danger'" class="fw-semibold">
-                  {{ transacao.valor | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
-                  <!-- R$ {{ transacao.valor}} -->
-                </td>
-                <!-- Ações -->
-                <td>
-                  <div class="d-flex justify-content-center gap-2 text-muted">
-                    <i class="bi bi-pencil cursor-pointer hover-purple"></i>
-                    <i class="bi bi-trash cursor-pointer hover-danger"></i>
-                  </div>
-                </td>
-              </tr>
+            <tr>
+              <!-- Situação -->
+              <td>
+                @if (transacao.lancamentoEfetivado) {
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                } @else {
+                <i class="bi bi-clock-history text-warning fs-5"></i>
+                }
+              </td>
+              <!-- Data -->
+              <td class="text-muted">{{ exibirData(transacao.data) }}</td>
+              <!-- Descrição -->
+              <td class="fw-medium text-dark text-capitalize">{{ transacao.descricao }}</td>
+              <!-- Categoria -->
+              <td>
+                <span class="badge bg-dark-purple px-2 py-1 rounded-3 small">
+                  {{ transacao.categoria }}
+                </span>
+              </td>
+              <!-- Conta -->
+              <td class="text-secondary">{{ transacao.conta }}</td>
+              <!-- Valor (Muda de cor dinamicamente se for positivo/negativo) -->
+              <td [ngClass]="transacao.valor >= 0 ? 'text-success' : 'text-danger'" class="fw-semibold">
+                {{ transacao.valor | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                <!-- R$ {{ transacao.valor}} -->
+              </td>
+              <!-- Ações -->
+              <td>
+                <div class="d-flex justify-content-center gap-2 text-muted">
+                  <i class="bi bi-pencil cursor-pointer hover-purple"></i>
+                  <i class="bi bi-trash cursor-pointer hover-danger" (click)="excluir(transacao)"></i>
+                </div>
+              </td>
+            </tr>
             }
             @empty {
-              <tr>
-                <td colspan="7" class="text-center text-muted py-4">
-                  Nenhuma transação encontrada para os filtros selecionados.
-                </td>
-              </tr>
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                Nenhuma transação encontrada para os filtros selecionados.
+              </td>
+            </tr>
             }
           </tbody>
         </table>
@@ -94,37 +95,41 @@
   <!-- Coluna dos Cards de Saldo (Direita) -->
   <div class="col-12 col-xl-3 d-flex flex-column gap-3">
     <!-- Card Saldo Atual -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+    <div
+      class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Saldo atual</span>
-        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.saldoAtual | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</h4>
+        <h4 class="fw-bold text-dark m-0">{{ resumo().saldoAtual | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</h4>
       </div>
       <div class="icon-circle bg-primary text-white"><i class="bi bi-bank"></i></div>
     </div>
 
     <!-- Card Receitas -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+    <div
+      class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Receitas</span>
-        <h4 class="fw-bold text-dark m-0"> {{ cardsLateral.receitas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
+        <h4 class="fw-bold text-dark m-0"> {{ resumo().receitas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-success text-white"><i class="bi bi-arrow-up"></i></div>
     </div>
 
     <!-- Card Despesas -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+    <div
+      class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Despesas</span>
-        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.despesas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
+        <h4 class="fw-bold text-dark m-0">{{ resumo().despesas | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-danger text-white"><i class="bi bi-arrow-down"></i></div>
     </div>
 
     <!-- Card Balanço Mensal -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
+    <div
+      class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center">
       <div>
         <span class="text-muted small d-block">Balanço mensal</span>
-        <h4 class="fw-bold text-dark m-0">{{ cardsLateral.balancoMensal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
+        <h4 class="fw-bold text-dark m-0">{{ resumo().balancoMensal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h4>
       </div>
       <div class="icon-circle bg-teal text-white"><i class="bi bi-scales"></i></div>
     </div>

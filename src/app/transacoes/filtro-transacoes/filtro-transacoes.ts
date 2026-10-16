@@ -1,9 +1,11 @@
 import { TransacoesFilter } from './../../models/filter.model';
 import { TransacaoService } from './../../services/transacao';
 import { Transacoes } from './../transacoes';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CONTAS, TAGS, TIPO_LANCAMENTO, DropdownId, SITUACOES } from '../../models/opcoes.model';
+import { isEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-filtro-transacoes',
@@ -13,44 +15,40 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./filtro-transacoes.scss'],
 })
 export class FiltroTransacoes {
-  private transacaoService = inject(TransacaoService);
-  public svc = inject(TransacaoService);
-  salvarPersonalizado: boolean = true;
-  dropdownContasAberto: boolean = false;
-  dropdownTagsAberto: boolean = false;
+  //#region Fechar dropdown ao clicar fora ou apertar ESC
+  @HostListener('document:pointerdown', ['$event'])
+  fecharAoClicarFora(event: PointerEvent): void {
+    if (!this.dropdownAberto) return;
+    const alvo = event.target as Element | null;
+    if (!alvo?.closest('.campo-dropdown')) this.dropdownAberto = null;
+  }
 
-  // Lista de opções disponíveis de contas
-  contasDisponiveis = signal<string[]>([
-    'Itau',
-    'Nuconta',
-    'Bradesco',
-    'Caixa',
-    'Santander',
-    'Carteira',
-  ]);
+  //#endregion Explicação da region no final do código (explicação 01)
 
-  tagsDisponiveis = signal<string[]>([
-    'Salário',
-    'Receita',
-    'Despesa',
-    'Transferência',
-    'Mecado',
-    'Transporte',
-    'Saúde',
-    'Outros',
-  ]);
+  readonly transacaoService = inject(TransacaoService);
+  salvarPersonalizado: boolean = true; //**
 
-  filtros: TransacoesFilter = {
-    contas: ['Itau'] as string[],
-    tag: '',
-    lancamentoEfetivado: null,
-    tipo: '',
-    dataInicio: '2026-09-20',
-    dataFim: '2026-09-24',
-  };
+  readonly contasDisponiveis = CONTAS;
+  readonly tagsDisponiveis = TAGS;
+  readonly tiposLancamentoDisponiveis = TIPO_LANCAMENTO; //**
+  readonly situacoesDisponiveis = SITUACOES;
+  filtros: TransacoesFilter = this.clonar(this.transacaoService.filtrosAtivos());
+  dropdownAberto: DropdownId | null = null;
+
+  private clonar(f: TransacoesFilter): TransacoesFilter {
+    return { ...f, contas: [...f.contas] };
+  }
+
+  sincronizar(): void {
+    this.filtros = this.clonar(this.transacaoService.filtrosAtivos());
+  }
 
   ngOnInit(): void {
-    const filtrosSelecionados = this.svc.filtrosAtivos();
+    const filtrosSelecionados = this.transacaoService.filtrosAtivos();
+    // filtrosSelecionados.dataInicio =  '2026-10-01';
+    // filtrosSelecionados.dataFim = '2026-10-31';
+    // this.filtros.dataInicio = filtrosSelecionados.dataInicio;
+    // this.filtros.dataFim = filtrosSelecionados.dataFim;
     if (filtrosSelecionados) {
       const contasIniciais = Array.isArray(filtrosSelecionados.contas)
         ? filtrosSelecionados.contas
@@ -60,38 +58,33 @@ export class FiltroTransacoes {
 
       this.filtros.contas = [...contasIniciais];
     }
-
   }
 
-  alterarDropdown(tipo: string): void {
-    console.log('alterarDropdown:', tipo);
-    // this.dropdownContasAberto = !this.dropdownContasAberto;
-    if (tipo == 'contas') this.dropdownContasAberto = !this.dropdownContasAberto;
-    else if (tipo == 'tag') this.dropdownTagsAberto = !this.dropdownContasAberto;
+  alterarDropdown(id: DropdownId): void {
+    this.dropdownAberto = this.dropdownAberto === id ? null : id;
   }
 
-  // Fecha o dropdown ao tirar o ponteiro do mouse
-  fecharDropdown(tipo: string): void {
-    if (tipo == 'contas') this.dropdownContasAberto = false;
-    else if (tipo == 'tag') this.dropdownTagsAberto = false;
-  }
+  alterarSelect(id: DropdownId, valor: any, event?: Event): void {
+    event?.stopPropagation();
 
-  // Alterna a seleção da conta no array do rascunho
-  alterarConta(conta: string): void {
-    const index = this.filtros.contas.indexOf(conta);
-    if (index > -1) {
-      this.filtros.contas.splice(index, 1);
-    } else {
-      this.filtros.contas.push(conta);
-    }
-    console.log('alterarConta():', this.filtros.contas);
-  }
-
-  alterarTag(tag:string): void{
-    if (tag) {
-      this.filtros.tag = tag;
-    } else {
-      this.filtros.tag = ''
+    switch (id) {
+      case 'contas': {
+        const c = this.filtros.contas;
+        this.filtros.contas = c.includes(valor) ? c.filter((x) => x !== valor) : [...c, valor];
+        break; // multisseleção: mantém aberto
+      }
+      case 'tag':
+        this.filtros.tag = valor || '';
+        this.dropdownAberto = null;
+        break;
+      case 'tipo':
+        this.filtros.tipo = valor || '';
+        this.dropdownAberto = null;
+        break;
+      case 'situacao':
+        this.filtros.lancamentoEfetivado = typeof valor === 'boolean' ? valor : null; // ('' == false) é igual verdadeiro
+        this.dropdownAberto = null;
+        break;
     }
   }
 
@@ -111,18 +104,28 @@ export class FiltroTransacoes {
     return '#5c16ca';
   }
 
-  aplicarFiltro() {
-    // this.transacaoService.filtrosAtivos.set({ ...this.filtros });
-    console.log('filtrosAtivos: ', this.svc.filtrosAtivos);
-    this.svc.filtrosAtivos.set({ ...this.filtros });
-    console.log('aplicarFiltro: ', this.filtros);
+  aplicarFiltro(): void {
+    this.transacaoService.filtrosAtivos.set(this.clonar(this.filtros));
+    this.fecharModal();
+  }
 
-    // Fecha a modal do Bootstrap
-    const modalElement = document.getElementById('modalFiltroTransacoes');
-    if (modalElement) {
-      const bootstrap = (window as any).bootstrap;
-      const modalInstance = bootstrap.Modal.getInstance(modalElement);
-      if (modalInstance) modalInstance.hide();
-    }
+  private fecharModal(): void {
+    const el = document.getElementById('modalFiltroTransacoes');
+    const bootstrap = (window as any).bootstrap;
+    if (el && bootstrap) bootstrap.Modal.getInstance(el)?.hide();
   }
 }
+
+/*==================== Explicações do código ====================*/
+/*========== Explicação 01: Região para agrupar métodos relacionados ao fechamento do dropdown ==========*/
+/* Usei pointerdown em vez de click por dois motivos:
+    * Toque no iOS: o Safari do iOS não dispara click no document quando o elemento tocado não é “clicável” (uma div comum, por exemplo). O pointerdown funciona igual em mouse, toque e caneta.
+    * Ordem dos eventos: o pointerdown acontece antes do click. Quando o clique numa opção remove o elemento do DOM (o @if fecha o menu), o handler de fora já rodou com o elemento ainda no lugar, sem risco de o closest falhar num nó removido.
+
+** O @HostListener fica sempre ativo, mas retorna logo na primeira linha quando nenhum dropdown está aberto, então o custo é desprezível.
+    //Não precisei mais usar esse...
+    @HostListener('document:keydown.escape')
+    fecharComEsc(): void {
+      this.dropdownAberto = null;
+    }
+*/

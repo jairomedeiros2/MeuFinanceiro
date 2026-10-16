@@ -1,4 +1,5 @@
-export type TransactionType = 'RECEITA' | 'DESPESA' | 'TRANSFERENCIA';
+export type TipoTransacao = 'RECEITA' | 'DESPESA' | 'TRANSFERENCIA';
+export type TipoLancamento = 'FIXA' | 'REPETIDO';
 
 export interface AccountOption {
   id: string;
@@ -14,7 +15,7 @@ export interface TagOption {
 }
 
 export interface TransactionFilter {
-  types: TransactionType[];
+  types: TipoTransacao[];
   accountIds: string[];
   tagIds: string[];
 }
