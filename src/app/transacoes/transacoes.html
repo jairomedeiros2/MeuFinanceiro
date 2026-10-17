@@ -9,8 +9,15 @@
   <!-- Ícones de Ação Superiores -->
   <div class="d-flex align-items-center gap-2">
     <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-search"></i></button>
-    <button class="btn btn-light rounded-circle shadow-sm border border-danger" data-bs-toggle="modal"
-      data-bs-target="#modalFiltroTransacoes"><i class="bi bi-funnel"></i></button>
+    <button class="btn btn-light rounded-circle shadow-sm position-relative" [class.border-primary]="totalFiltros() > 0"
+      data-bs-toggle="modal" data-bs-target="#modalFiltroTransacoes" aria-label="Filtrar transações">
+      <i class="bi bi-funnel" [class.text-primary]="totalFiltros() > 0"></i>
+      @if (totalFiltros() > 0) {
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+        {{ totalFiltros() }}
+      </span>
+      }
+    </button>
     <button class="btn btn-light rounded-circle shadow-sm"><i class="bi bi-three-dots-vertical"></i></button>
   </div>
 </div>
@@ -19,10 +26,36 @@
 <div class="d-flex align-items-center justify-content-center gap-4 mb-4">
   <button class="btn btn-link text-secondary p-0" (click)="mesAnterior()"><i
       class="bi bi-chevron-left fs-4"></i></button>
-  <span class="badge bg-light text-dark px-4 py-2 rounded-pill fw-semibold fs-6 border">{{ rotuloMes() }}</span>
+  <span class="badge px-4 py-2 rounded-pill fw-semibold fs-6 border"
+    [ngClass]="periodoPersonalizado() ? 'periodo-personalizado' : 'bg-light text-dark'">
+    {{ rotuloMes() }}
+  </span>
   <button class="btn btn-link text-secondary p-0" (click)="mesSeguinte()"><i
       class="bi bi-chevron-right fs-4"></i></button>
 </div>
+
+@if (chips().length > 0) {
+<div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+  @for (chip of chips(); track chip.chave + (chip.valor ?? '')) {
+  <span class="chip-filtro d-inline-flex align-items-center gap-2">
+    @if (chip.cor) {
+    <span class="chip-dot" [style.background-color]="chip.cor"></span>
+    } @else if (chip.icone) {
+    <i class="bi" [ngClass]="chip.icone"></i>
+    }
+    <span>{{ chip.rotulo }}</span>
+    <button type="button" class="chip-remover" (click)="removerChip(chip)"
+      [attr.aria-label]="'Remover filtro ' + chip.rotulo">
+      <i class="bi bi-x-circle-fill"></i>
+    </button>
+  </span>
+  }
+  <button type="button" class="btn btn-link btn-sm text-secondary text-decoration-none fw-semibold shadow-none"
+    (click)="limparTodos()">
+    Limpar tudo
+  </button>
+</div>
+}
 
 <div class="row g-4">
   <!-- Coluna da Tabela (Esquerda) -->
@@ -82,7 +115,11 @@
             @empty {
             <tr>
               <td colspan="7" class="text-center text-muted py-4">
+                @if (chips().length > 0) {
                 Nenhuma transação encontrada para os filtros selecionados.
+                } @else {
+                Nenhuma transação neste período.
+                }
               </td>
             </tr>
             }

@@ -42,3 +42,43 @@ $purple-primary: #5c16ca;
 
 .hover-purple:hover { color: $purple-primary; }
 .hover-danger:hover { color: #ef4444; }
+
+.chip-filtro {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 4px 6px 4px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .chip-remover {
+    border: 0;
+    background: transparent;
+    padding: 0 4px;
+    line-height: 1;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      color: #ef4444;
+      transform: scale(1.15);
+    }
+  }
+}
+
+.periodo-personalizado {
+  background-color: #eef2ff !important;
+  color: #3730a3 !important;
+  border-color: #c7d2fe !important;
+}

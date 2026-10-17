@@ -1,8 +1,18 @@
 import { Component, OnInit, computed, inject } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { TransacaoService, inicioDoMes, fimDoMes } from '../services/transacao';
 import { Transacao } from '../models/transacao.model';
 import { FiltroTransacoes } from './filtro-transacoes/filtro-transacoes';
+import { TransacaoService, inicioDoMes, fimDoMes, ehMesCompleto } from '../services/transacao';
+import { ChaveFiltro } from '../models/filter.model';
+import { corBanco } from '../models/opcoes.model';
+
+interface FiltroChip {
+  chave: ChaveFiltro;
+  valor?: string; // só para 'contas' (identifica qual conta remover)
+  rotulo: string;
+  cor?: string; // bolinha colorida das contas
+  icone?: string;
+}
 
 @Component({
   selector: 'app-transacoes',
@@ -48,7 +58,7 @@ export class Transacoes implements OnInit {
       );
   });
 
-  /** Cards da lateral: recalculados do zero a cada mudança (antes acumulavam). */
+  /** Cards da lateral: recalculados do zero a cada mudança. */
   resumo = computed(() => {
     const itens = this.listaTransacoes().filter((t) => !t.ignorarTransacao);
     const efetivados = itens.filter((t) => t.lancamentoEfetivado);
@@ -63,9 +73,63 @@ export class Transacoes implements OnInit {
       balancoMensal: receitas - despesas,
     };
   });
+  //#region CHIPS DE FILTROS ATIVOS
+  /** Um chip por filtro ativo. Contas geram um chip por banco. */
+  chips = computed<FiltroChip[]>(() => {
+    const f = this.svc.filtrosAtivos();
+    const lista: FiltroChip[] = [];
 
+    f.contas.forEach((c) => lista.push({ chave: 'contas', valor: c, rotulo: c, cor: corBanco(c) }));
+    if (f.tag) lista.push({ chave: 'tag', rotulo: `Tag: ${f.tag}`, icone: 'bi-tag' });
+    if (f.tipo)
+      lista.push({ chave: 'tipo', rotulo: `Tipo: ${f.tipo}`, icone: 'bi-arrow-left-right' });
+    if (f.lancamentoEfetivado !== null) {
+      lista.push({
+        chave: 'lancamentoEfetivado',
+        rotulo: `Situação: ${f.lancamentoEfetivado ? 'Efetivado' : 'Pendente'}`,
+        icone: 'bi-check2-circle',
+      });
+    }
+    return lista;
+  });
+
+  // totalFiltros = computed(() => this.chips().length);
+  totalFiltros = computed(() => this.chips().length + (this.periodoPersonalizado() ? 1 : 0));
+
+  removerChip(chip: FiltroChip): void {
+    this.svc.removerFiltro(chip.chave, chip.valor);
+  }
+
+  limparTodos(): void {
+    this.svc.limparTodos();
+  }
+  //#endregion CHIPS DE FILTROS ATIVOS
+
+  //#region SELETORES DE MÊS / PERIODO
+  private rotuloPeriodo(inicio: string, fim: string): string {
+    const di = inicio ? this.exibirData(inicio) : '';
+    const df = fim ? this.exibirData(fim) : '';
+    if (di && df) return `${di} – ${df}`;
+    if (di) return `A partir de ${di}`;
+    if (df) return `Até ${df}`;
+    return 'Qualquer data';
+  }
+
+  /** true quando o intervalo não é um mês cheio (ex.: 05/10 a 20/11). */
+  periodoPersonalizado = computed(() => {
+    const f = this.svc.filtrosAtivos();
+    return !ehMesCompleto(f.dataInicio, f.dataFim);
+  });
+
+  /** Texto do seletor central: nome do mês ou o intervalo personalizado. */
   rotuloMes = computed(() => {
-    const inicio = this.paraDate(this.svc.filtrosAtivos().dataInicio) ?? new Date();
+    const f = this.svc.filtrosAtivos();
+
+    if (this.periodoPersonalizado()) {
+      return this.rotuloPeriodo(f.dataInicio, f.dataFim);
+    }
+
+    const inicio = this.paraDate(f.dataInicio) ?? new Date();
     const texto = inicio.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
     return texto.charAt(0).toUpperCase() + texto.slice(1);
   });
@@ -86,6 +150,7 @@ export class Transacoes implements OnInit {
       dataFim: fimDoMes(novo),
     }));
   }
+  //#endregion
 
   excluir(t: Transacao): void {
     if (t.id === undefined || !confirm(`Excluir "${t.descricao}"?`)) return;

@@ -4,7 +4,14 @@ import { Transacoes } from './../transacoes';
 import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CONTAS, TAGS, TIPO_LANCAMENTO, DropdownId, SITUACOES } from '../../models/opcoes.model';
+import {
+  CONTAS,
+  TAGS,
+  TIPO_LANCAMENTO,
+  DropdownId,
+  SITUACOES,
+  corBanco,
+} from '../../models/opcoes.model';
 import { isEmpty } from 'rxjs';
 
 @Component({
@@ -94,14 +101,7 @@ export class FiltroTransacoes {
   }
 
   getCorBanco(nomeConta: string): string {
-    if (!nomeConta) return '#5c16ca';
-    const c = nomeConta.toLowerCase();
-    if (c.includes('itau') || c.includes('itaú')) return '#ec7000';
-    if (c.includes('nu') || c.includes('nubank')) return '#820ad1';
-    if (c.includes('caixa')) return '#005ca9';
-    if (c.includes('bradesco')) return '#cc092f';
-    if (c.includes('santander')) return '#ea1d2c';
-    return '#5c16ca';
+    return corBanco(nomeConta);
   }
 
   aplicarFiltro(): void {
