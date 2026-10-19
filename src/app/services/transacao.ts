@@ -39,14 +39,16 @@ export class TransacaoService {
     contas: [],
     tag: '',
     lancamentoEfetivado: null,
-    tipo: '',
+    lancamentoFixo: null,
     dataInicio: inicioDoMes(),
     dataFim: fimDoMes(),
   });
 
   carregar(): void {
     this.http.get<Transacao[]>(this.apiUrl).subscribe({
-      next: (dados) => this.transacoes.set(dados),
+      next: (dados) => {
+        (this.transacoes.set(dados), console.log('carregar(): ', dados));
+      },
       error: (erro) => console.error('Erro ao buscar transações:', erro),
     });
   }
@@ -65,14 +67,6 @@ export class TransacaoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(tap(() => this.carregar()));
   }
 
-  // limparFiltro(chave: keyof TransacoesFilter): void {
-  //   this.filtrosAtivos.update((filtros) => {
-  //     const atual = filtros[chave];
-  //     const vazio = Array.isArray(atual) ? [] : typeof atual === 'string' ? '' : null;
-  //     return { ...filtros, [chave]: vazio };
-  //   });
-  // }
-
   /** Remove um filtro específico (ou uma conta específica, no caso de 'contas'). */
   removerFiltro(chave: ChaveFiltro, valor?: string): void {
     this.filtrosAtivos.update((f) => {
@@ -81,8 +75,8 @@ export class TransacaoService {
           return { ...f, contas: f.contas.filter((c) => c !== valor) };
         case 'tag':
           return { ...f, tag: '' };
-        case 'tipo':
-          return { ...f, tipo: '' };
+        case 'lancamentoFixo':
+          return { ...f, lancamentoFixo: null };
         case 'lancamentoEfetivado':
           return { ...f, lancamentoEfetivado: null };
         // case 'periodo':
@@ -97,7 +91,7 @@ export class TransacaoService {
       ...f,
       contas: [],
       tag: '',
-      tipo: '',
+      lancamentoFixo: null,
       lancamentoEfetivado: null,
       // ...this.mesDe(f.dataInicio),
     }));

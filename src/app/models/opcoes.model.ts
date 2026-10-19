@@ -21,7 +21,6 @@ export const TAGS = [
 
 export const CATEGORIAS_RECEITA = ['Salário', 'Investimentos', 'Freelance', 'Outros'];
 export const TIPO_TRANSACAO = ['RECEITA', 'DESPESA', 'TRANSFERENCIA'];
-export const TIPO_LANCAMENTO = ['FIXO', 'REPETIDO'];
 export const CATEGORIAS_DESPESA = [
   'Alimentação',
   'Educação',
@@ -35,10 +34,14 @@ export const CATEGORIAS_DESPESA = [
   'Outros',
 ];
 
-export type DropdownId = 'contas' | 'tag' | 'tipo' | 'situacao';
+export type DropdownId = 'contas' | 'tag' | 'lancamentoFixo' | 'status';
 export const SITUACOES = [
   { valor: true, rotulo: 'Efetivado' },
   { valor: false, rotulo: 'Pendente' },
+];
+export const LANCAMENTO_FIXO = [
+  { valor: true, rotulo: 'Fixo' },
+  { valor: false, rotulo: 'Recorrente' },
 ];
 
 export function corBanco(nomeConta: string): string {

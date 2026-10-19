@@ -7,10 +7,10 @@ import { FormsModule } from '@angular/forms';
 import {
   CONTAS,
   TAGS,
-  TIPO_LANCAMENTO,
   DropdownId,
   SITUACOES,
   corBanco,
+  LANCAMENTO_FIXO,
 } from '../../models/opcoes.model';
 import { isEmpty } from 'rxjs';
 
@@ -22,14 +22,13 @@ import { isEmpty } from 'rxjs';
   styleUrls: ['./filtro-transacoes.scss'],
 })
 export class FiltroTransacoes {
-  //#region Fechar dropdown ao clicar fora ou apertar ESC
+  //#region Fechar dropdown ao clicar fora
   @HostListener('document:pointerdown', ['$event'])
   fecharAoClicarFora(event: PointerEvent): void {
     if (!this.dropdownAberto) return;
     const alvo = event.target as Element | null;
     if (!alvo?.closest('.campo-dropdown')) this.dropdownAberto = null;
   }
-
   //#endregion Explicação da region no final do código (explicação 01)
 
   readonly transacaoService = inject(TransacaoService);
@@ -37,8 +36,8 @@ export class FiltroTransacoes {
 
   readonly contasDisponiveis = CONTAS;
   readonly tagsDisponiveis = TAGS;
-  readonly tiposLancamentoDisponiveis = TIPO_LANCAMENTO; //**
   readonly situacoesDisponiveis = SITUACOES;
+  readonly lancamentoFixoDisponiveis = LANCAMENTO_FIXO;
   filtros: TransacoesFilter = this.clonar(this.transacaoService.filtrosAtivos());
   dropdownAberto: DropdownId | null = null;
 
@@ -52,10 +51,6 @@ export class FiltroTransacoes {
 
   ngOnInit(): void {
     const filtrosSelecionados = this.transacaoService.filtrosAtivos();
-    // filtrosSelecionados.dataInicio =  '2026-10-01';
-    // filtrosSelecionados.dataFim = '2026-10-31';
-    // this.filtros.dataInicio = filtrosSelecionados.dataInicio;
-    // this.filtros.dataFim = filtrosSelecionados.dataFim;
     if (filtrosSelecionados) {
       const contasIniciais = Array.isArray(filtrosSelecionados.contas)
         ? filtrosSelecionados.contas
@@ -84,11 +79,11 @@ export class FiltroTransacoes {
         this.filtros.tag = valor || '';
         this.dropdownAberto = null;
         break;
-      case 'tipo':
-        this.filtros.tipo = valor || '';
+      case 'lancamentoFixo':
+        this.filtros.lancamentoFixo = typeof valor === 'boolean' ? valor : null;
         this.dropdownAberto = null;
         break;
-      case 'situacao':
+      case 'status':
         this.filtros.lancamentoEfetivado = typeof valor === 'boolean' ? valor : null; // ('' == false) é igual verdadeiro
         this.dropdownAberto = null;
         break;
@@ -106,6 +101,7 @@ export class FiltroTransacoes {
 
   aplicarFiltro(): void {
     this.transacaoService.filtrosAtivos.set(this.clonar(this.filtros));
+    console.log('aplicarFiltro(): ', this.transacaoService.filtrosAtivos());
     this.fecharModal();
   }
 

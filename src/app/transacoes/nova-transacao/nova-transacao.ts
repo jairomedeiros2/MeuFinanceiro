@@ -56,7 +56,6 @@ export class NovaTransacao {
 
   /** Chamado pelo menu lateral ao abrir o modal (Receita ou Despesa). */
   definirTipo(tipo: TipoLancamento): void {
-    console.log("definirTipo chamado com tipo:", tipo);
     this.tipo.set(tipo);
     this.reiniciar();
   }

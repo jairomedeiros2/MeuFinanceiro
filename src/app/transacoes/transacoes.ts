@@ -33,21 +33,18 @@ export class Transacoes implements OnInit {
     const filtro = this.svc.filtrosAtivos();
     const inicio = this.paraDate(filtro.dataInicio);
     const fim = this.paraDate(filtro.dataFim);
-    const tipo = (filtro.tipo ?? '').toLowerCase();
 
     return this.svc
       .transacoes()
       .filter((t) => {
         if (filtro.contas.length > 0 && !filtro.contas.includes(t.conta)) return false;
         if (filtro.tag && t.tag !== filtro.tag) return false;
-        if (
-          filtro.lancamentoEfetivado !== null &&
-          t.lancamentoEfetivado !== filtro.lancamentoEfetivado
-        )
-          return false;
-        if (tipo.startsWith('receita') && t.valor <= 0) return false;
-        if (tipo.startsWith('despesa') && t.valor >= 0) return false;
-
+        if (filtro.lancamentoEfetivado !== null && t.lancamentoEfetivado !== filtro.lancamentoEfetivado){
+            return false;
+          }
+        if (filtro.lancamentoFixo !== null && t.lancamentoFixo !== filtro.lancamentoFixo){
+            return false;
+          }
         const data = this.paraDate(t.data);
         if (data && inicio && data < inicio) return false;
         if (data && fim && data > fim) return false;
@@ -73,6 +70,7 @@ export class Transacoes implements OnInit {
       balancoMensal: receitas - despesas,
     };
   });
+
   //#region CHIPS DE FILTROS ATIVOS
   /** Um chip por filtro ativo. Contas geram um chip por banco. */
   chips = computed<FiltroChip[]>(() => {
@@ -81,15 +79,22 @@ export class Transacoes implements OnInit {
 
     f.contas.forEach((c) => lista.push({ chave: 'contas', valor: c, rotulo: c, cor: corBanco(c) }));
     if (f.tag) lista.push({ chave: 'tag', rotulo: `Tag: ${f.tag}`, icone: 'bi-tag' });
-    if (f.tipo)
-      lista.push({ chave: 'tipo', rotulo: `Tipo: ${f.tipo}`, icone: 'bi-arrow-left-right' });
+    if (f.lancamentoFixo !== null){
+      lista.push({
+        chave: 'lancamentoFixo',
+        rotulo: `Lançamento: ${f.lancamentoFixo ? 'Fixo' : 'Recorrente'}`,
+        icone: 'bi-arrow-left-right',
+      });
+      console.log('chips(): lancamentoFixo: ', f.lancamentoFixo);
+    }
     if (f.lancamentoEfetivado !== null) {
       lista.push({
         chave: 'lancamentoEfetivado',
-        rotulo: `Situação: ${f.lancamentoEfetivado ? 'Efetivado' : 'Pendente'}`,
+        rotulo: `Status: ${f.lancamentoEfetivado ? 'Efetivado' : 'Pendente'}`,
         icone: 'bi-check2-circle',
       });
     }
+      console.log('chips(): lista: ', lista);
     return lista;
   });
 

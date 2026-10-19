@@ -1,6 +1,6 @@
 export type TipoTransacao = 'RECEITA' | 'DESPESA' | 'TRANSFERENCIA';
 export type TipoLancamento = 'FIXA' | 'REPETIDO';
-export type ChaveFiltro = 'contas' | 'tag' | 'tipo' | 'lancamentoEfetivado';
+export type ChaveFiltro = 'contas' | 'tag' | 'lancamentoFixo' | 'lancamentoEfetivado';
 
 export interface AccountOption {
   id: string;
@@ -25,7 +25,7 @@ export interface TransacoesFilter {
   contas: string[];
   tag: string;
   lancamentoEfetivado: boolean | null;
-  tipo: string;
+  lancamentoFixo: boolean | null;
   dataInicio: string;
   dataFim: string;
 }

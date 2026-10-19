@@ -107,37 +107,37 @@
 
           <!-- Filtro de Situações -->
           <div class="position-relative mb-4 campo-dropdown">
-            <label class="form-label text-muted small fw-semibold mb-1">Situação</label>
+            <label class="form-label text-muted small fw-semibold mb-1">Status</label>
 
             <div
               class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
-              (click)="alterarDropdown('situacao')">
+              (click)="alterarDropdown('status')">
 
               <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
                 @if (filtros.lancamentoEfetivado !== null) {
                 <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
-                  <span>{{ filtros.lancamentoEfetivado ? 'Efetuado' : 'Pendente' }}</span>
+                  <span>{{ filtros.lancamentoEfetivado ? 'Efetivado' : 'Pendente' }}</span>
                   <i class="bi bi-x-circle-fill btn-remove-option"
-                    (click)="alterarSelect('situacao', null, $event)"></i>
+                    (click)="alterarSelect('status', null, $event)"></i>
                 </span>
                 } @else {
-                <span class="text-muted small ps-1">Selecione uma situação...</span>
+                <span class="text-muted small ps-1">Selecione um status...</span>
                 }
               </div>
               <i class="bi bi-chevron-down text-muted transition-icon"
-                [class.rotate-180]="dropdownAberto === 'situacao'"></i>
+                [class.rotate-180]="dropdownAberto === 'status'"></i>
             </div>
 
             <!-- Listagem de Opções -->
-            @if (dropdownAberto === 'situacao') {
+            @if (dropdownAberto === 'status') {
             <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
-              @for (situacao of situacoesDisponiveis; track situacao) {
+              @for (status of situacoesDisponiveis; track status) {
               <div
                 class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
-                [class.active-item]="filtros.lancamentoEfetivado === situacao.valor"
-                (click)="alterarSelect('situacao', situacao.valor, $event)">
-                <span class="fw-medium small text-dark">{{ situacao.rotulo }}</span>
-                @if (filtros.lancamentoEfetivado === situacao.valor) {
+                [class.active-item]="filtros.lancamentoEfetivado === status.valor"
+                (click)="alterarSelect('status', status.valor, $event)">
+                <span class="fw-medium small text-dark">{{ status.rotulo }}</span>
+                @if (filtros.lancamentoEfetivado === status.valor) {
                 <i class="bi bi-check-lg text-primary fw-bold"></i>
                 }
               </div>
@@ -152,34 +152,34 @@
 
             <div
               class="input-tag-container d-flex align-items-center justify-content-between p-2 rounded-3 border cursor-pointer"
-              (click)="alterarDropdown('tipo')">
+              (click)="alterarDropdown('lancamentoFixo')">
 
               <div class="d-flex flex-wrap gap-2 align-items-center flex-grow-1 me-2">
-                @if (filtros.tipo) {
+                @if (filtros.lancamentoFixo !== null) {
                 <span class="badge-account-tag d-inline-flex align-items-center gap-2 shadow-sm">
-                  <span>{{ filtros.tipo }}</span>
-                  <i class="bi bi-x-circle-fill btn-remove-option" (click)="alterarSelect('tipo', '', $event)"></i>
+                  <span>{{ filtros.lancamentoFixo ? 'Fixo' : 'Recorrente' }}</span>
+                  <i class="bi bi-x-circle-fill btn-remove-option" (click)="alterarSelect('lancamentoFixo', '', $event)"></i>
                 </span>
                 } @else {
                 <span class="text-muted small ps-1">Selecione um Tipo de Lançamento ...</span>
                 }
               </div>
               <i class="bi bi-chevron-down text-muted transition-icon"
-                [class.rotate-180]="dropdownAberto === 'tipo'"></i>
+                [class.rotate-180]="dropdownAberto === 'lancamentoFixo'"></i>
             </div>
 
             <!-- Listagem de Opções -->
-            @if (dropdownAberto === 'tipo') {
+            @if (dropdownAberto === 'lancamentoFixo') {
             <div class="dropdown-select-menu position-absolute w-100 mt-1 p-2 rounded-3 shadow-lg bg-white border z-3">
-              @for (tipoLancamento of tiposLancamentoDisponiveis; track tipoLancamento) {
+              @for (lancamentoFixo of lancamentoFixoDisponiveis; track lancamentoFixo) {
               <div
                 class="dropdown-item-custom d-flex align-items-center justify-content-between p-2 rounded-2 cursor-pointer mb-1"
-                [class.active-item]="filtros.tipo === tipoLancamento"
-                (click)="alterarSelect('tipo', tipoLancamento, $event)">
+                [class.active-item]="filtros.lancamentoFixo === lancamentoFixo.valor"
+                (click)="alterarSelect('lancamentoFixo', lancamentoFixo.valor, $event)">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="fw-medium small text-dark">{{ tipoLancamento }}</span>
+                  <span class="fw-medium small text-dark">{{ lancamentoFixo.rotulo }}</span>
                 </div>
-                @if (filtros.tipo === tipoLancamento) {
+                @if (filtros.lancamentoFixo === lancamentoFixo.valor) {
                 <i class="bi bi-check-lg text-primary fw-bold"></i>
                 }
               </div>
