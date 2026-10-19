@@ -47,7 +47,7 @@ export class TransacaoService {
   carregar(): void {
     this.http.get<Transacao[]>(this.apiUrl).subscribe({
       next: (dados) => {
-        (this.transacoes.set(dados), console.log('carregar(): ', dados));
+        (this.transacoes.set(dados));
       },
       error: (erro) => console.error('Erro ao buscar transações:', erro),
     });

@@ -1,6 +1,5 @@
 import { TransacoesFilter } from './../../models/filter.model';
 import { TransacaoService } from './../../services/transacao';
-import { Transacoes } from './../transacoes';
 import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +11,6 @@ import {
   corBanco,
   LANCAMENTO_FIXO,
 } from '../../models/opcoes.model';
-import { isEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-filtro-transacoes',
@@ -50,16 +48,7 @@ export class FiltroTransacoes {
   }
 
   ngOnInit(): void {
-    const filtrosSelecionados = this.transacaoService.filtrosAtivos();
-    if (filtrosSelecionados) {
-      const contasIniciais = Array.isArray(filtrosSelecionados.contas)
-        ? filtrosSelecionados.contas
-        : filtrosSelecionados.contas
-          ? [filtrosSelecionados.contas]
-          : [];
 
-      this.filtros.contas = [...contasIniciais];
-    }
   }
 
   alterarDropdown(id: DropdownId): void {
@@ -101,7 +90,6 @@ export class FiltroTransacoes {
 
   aplicarFiltro(): void {
     this.transacaoService.filtrosAtivos.set(this.clonar(this.filtros));
-    console.log('aplicarFiltro(): ', this.transacaoService.filtrosAtivos());
     this.fecharModal();
   }
 

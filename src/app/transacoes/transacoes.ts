@@ -85,7 +85,6 @@ export class Transacoes implements OnInit {
         rotulo: `Lançamento: ${f.lancamentoFixo ? 'Fixo' : 'Recorrente'}`,
         icone: 'bi-arrow-left-right',
       });
-      console.log('chips(): lancamentoFixo: ', f.lancamentoFixo);
     }
     if (f.lancamentoEfetivado !== null) {
       lista.push({
@@ -94,7 +93,6 @@ export class Transacoes implements OnInit {
         icone: 'bi-check2-circle',
       });
     }
-      console.log('chips(): lista: ', lista);
     return lista;
   });
 
