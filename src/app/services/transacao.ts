@@ -15,7 +15,6 @@ export function inicioDoMes(ref: Date = new Date()): string {
   return formatarDataLocal(new Date(ref.getFullYear(), ref.getMonth(), 1));
 }
 
-// dia 0 do mês seguinte = último dia do mês (resolve meses com 28/29/30/31 dias)
 export function fimDoMes(ref: Date = new Date()): string {
   return formatarDataLocal(new Date(ref.getFullYear(), ref.getMonth() + 1, 0));
 }
@@ -46,9 +45,7 @@ export class TransacaoService {
 
   carregar(): void {
     this.http.get<Transacao[]>(this.apiUrl).subscribe({
-      next: (dados) => {
-        (this.transacoes.set(dados));
-      },
+      next: (dados) => this.transacoes.set(dados),
       error: (erro) => console.error('Erro ao buscar transações:', erro),
     });
   }
@@ -79,8 +76,6 @@ export class TransacaoService {
           return { ...f, lancamentoFixo: null };
         case 'lancamentoEfetivado':
           return { ...f, lancamentoEfetivado: null };
-        // case 'periodo':
-        //   return { ...f, ...this.mesDe(f.dataInicio) };
       }
     });
   }
@@ -93,14 +88,6 @@ export class TransacaoService {
       tag: '',
       lancamentoFixo: null,
       lancamentoEfetivado: null,
-      // ...this.mesDe(f.dataInicio),
     }));
-  }
-
-  /** Mês cheio que contém a data informada (ou o mês atual se ela for inválida). */
-  private mesDe(iso: string): { dataInicio: string; dataFim: string } {
-    const [a, m] = (iso ?? '').split('-').map(Number);
-    const ref = a && m ? new Date(a, m - 1, 1) : new Date();
-    return { dataInicio: inicioDoMes(ref), dataFim: fimDoMes(ref) };
   }
 }

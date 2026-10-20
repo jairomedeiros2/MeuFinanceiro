@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TransacaoService, formatarDataLocal } from '../../services/transacao';
 import { Transacao } from '../../models/transacao.model';
 import { CONTAS, CATEGORIAS_DESPESA, CATEGORIAS_RECEITA } from '../../models/opcoes.model';
+import { NaturezaLancamento } from '../../models/filter.model';
 
-export type TipoLancamento = 'receita' | 'despesa' | 'transferencia';
 type AtalhoData = 'hoje' | 'ontem' | 'outros';
 
 const MAX_DIGITOS = 12; // até 9.999.999.999,99
@@ -22,7 +22,7 @@ export class NovaTransacao {
 
   readonly contas = CONTAS;
 
-  tipo = signal<TipoLancamento>('receita');
+  tipo = signal<NaturezaLancamento>('receita');
   exibirMaisDetalhes = signal(false);
   atalhoData = signal<AtalhoData>('hoje');
   erros = signal<string[]>([]);
@@ -55,13 +55,13 @@ export class NovaTransacao {
   }
 
   /** Chamado pelo menu lateral ao abrir o modal (Receita ou Despesa). */
-  definirTipo(tipo: TipoLancamento): void {
+  definirTipo(tipo: NaturezaLancamento): void {
     this.tipo.set(tipo);
     this.reiniciar();
   }
 
   /** Seletor Receita | Despesa do topo: troca o tipo e mantém os demais campos. */
-  alterarTipo(tipo: TipoLancamento): void {
+  alterarTipo(tipo: NaturezaLancamento): void {
     if (this.tipo() === tipo) return;
     this.tipo.set(tipo);
     // a categoria escolhida pode não existir no outro tipo: limpa só nesse caso

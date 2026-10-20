@@ -1,25 +1,5 @@
-export type TipoTransacao = 'RECEITA' | 'DESPESA' | 'TRANSFERENCIA';
-export type TipoLancamento = 'FIXA' | 'REPETIDO';
 export type ChaveFiltro = 'contas' | 'tag' | 'lancamentoFixo' | 'lancamentoEfetivado';
-
-export interface AccountOption {
-  id: string;
-  name: string;
-  color?: string;
-  icon?: string;
-}
-
-export interface TagOption {
-  id: string;
-  name: string;
-  color?: string;
-}
-
-export interface TransactionFilter {
-  types: TipoTransacao[];
-  accountIds: string[];
-  tagIds: string[];
-}
+export type NaturezaLancamento = 'receita' | 'despesa' | 'transferencia';
 
 export interface TransacoesFilter {
   contas: string[];
@@ -29,3 +9,4 @@ export interface TransacoesFilter {
   dataInicio: string;
   dataFim: string;
 }
+

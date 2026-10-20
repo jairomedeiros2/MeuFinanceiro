@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $green-success: #4ade80;
 $green-active: #22c55e;
 $text-dark: #333333;
@@ -77,6 +79,8 @@ $text-dark: #333333;
   letter-spacing: 0.5px;
 
   &:hover {
-    background-color: darken($green-active, 5%);
+    // background-color: darken($green-active, 5%);
+    background-color: color.scale($green-active, $lightness: -11%);
+    background-color: color.adjust($green-active, $lightness: -5%);
   }
 }
